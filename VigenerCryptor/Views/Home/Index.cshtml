@@ -1,0 +1,36 @@
+﻿@{
+    ViewData["Title"] = "Vigener";
+}
+
+<section class="container">
+    <section class="row">
+        <div class="col-6 input__form">
+            <div class="row">
+                <form method="post" data-ajax="true" data-ajax-mode="replace"
+                      data-ajax-update="#text__output" data-ajax-url="/home/crypt">
+                    <div class="mb-3 col-4">
+                        <label for="input__key" class="form-label">Key</label>
+                        <input type="text" class="form-control" id="input__key" name="key" placeholder="скорпион" required>
+                    </div>
+                    <div class="mb-3 col-12">
+                        <label for="input__text" class="form-label">Text</label>
+                        <textarea class="form-control" id="input__text" name="text" rows="3" required></textarea>
+                    </div>
+                    <p><input type="submit" class="crypt__btn col-2" value="Sub"></p>
+                </form>
+            </div>
+        </div>
+
+        <div class="col-6 align-self-end otput__form">
+            <div class="" style="margin-bottom: 64px;">
+                <label for="text__output" class="form-label">Output</label>
+                <textarea class="form-control" id="text__output" rows="3" readonly></textarea>
+            </div>
+        </div>
+    </section>
+</section>
+
+
+@section Scripts {
+    <script src="~/lib/jquery.unobtrusive-ajax.js"></script>
+}

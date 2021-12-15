@@ -1,8 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
-namespace VigenerCipher
+namespace VigenerCryptor.Services
 {
-    class Vigener
+    public class Cryptor
     {
         private static string alphabetRus = "абвгдеёжзийклмнопрстуфхцчшщъыьэюя";
         private static string alphabetRusUpper = alphabetRus.ToUpper();
@@ -37,7 +40,7 @@ namespace VigenerCipher
 
             return result;
         }
-
+        
         public static string Decrypt(string text, string key)
         {
             key = key.ToLower();
