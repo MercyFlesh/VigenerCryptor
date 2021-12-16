@@ -9,5 +9,6 @@ namespace VigenerCryptor.Models
     {
         public string Key { set; get; }
         public string Text { set; get; }
+        public int Mode { set; get; }
     }
 }

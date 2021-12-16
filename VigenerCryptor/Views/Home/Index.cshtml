@@ -8,21 +8,31 @@
             <div class="row">
                 <form method="post" data-ajax="true" data-ajax-mode="replace"
                       data-ajax-update="#text__output" data-ajax-url="/home/crypt">
-                    <div class="mb-3 col-4">
-                        <label for="input__key" class="form-label">Key</label>
-                        <input type="text" class="form-control" id="input__key" name="key" placeholder="скорпион" required>
-                    </div>
                     <div class="mb-3 col-12">
                         <label for="input__text" class="form-label">Text</label>
                         <textarea class="form-control" id="input__text" name="text" rows="3" required></textarea>
                     </div>
-                    <p><input type="submit" class="crypt__btn col-2" value="Sub"></p>
+                    <div class="row">
+                        <div class="mb-3 col-4">
+                            <label for="input__key" class="form-label">Key</label>
+                            <input type="text" class="form-control col-3" id="input__key" name="key" placeholder="скорпион" required>
+                        </div>
+                        <div class="col-2 col-sm-2 mt-3 align-self-center">
+                            <select class="mode form-select" name="mode" style="width: auto; height:auto;">
+                                <option value=0 selected>Encrypt</option>
+                                <option value=1>Decrypt</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+
+                    <p><input type="submit" class="crypt__btn btn btn-secondary col-2" value="Submit"></p>
                 </form>
             </div>
         </div>
 
-        <div class="col-6 align-self-end otput__form">
-            <div class="" style="margin-bottom: 64px;">
+        <div class="col-6 otput__form">
+            <div>
                 <label for="text__output" class="form-label">Output</label>
                 <textarea class="form-control" id="text__output" rows="3" readonly></textarea>
             </div>

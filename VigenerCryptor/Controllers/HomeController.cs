@@ -22,7 +22,15 @@ namespace VigenerCryptor.Controllers
         [HttpPost]
         public string Crypt(CryptRequest request)
         {
-            return Cryptor.Decrypt(request.Text, request.Key);
+            switch(request.Mode)
+            {
+                case (0):
+                    return Cryptor.Encrypt(request.Text, request.Key);
+                case (1):
+                    return Cryptor.Decrypt(request.Text, request.Key);
+                default:
+                    return null;
+            }
         }
     }
 }
