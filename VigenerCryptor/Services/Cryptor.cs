@@ -52,7 +52,6 @@ namespace VigenerCryptor.Services
                     int temp = alphabetRus.IndexOf(key[i]) - 1;
                     int index = temp < 0 ? temp + 33 : temp;
                     modKey += alphabetRus[32 - index];
-
                 }
                 else
                     modKey += key[i];

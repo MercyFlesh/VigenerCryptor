@@ -1,4 +1,4 @@
-function getJsonForm(formName) {
+/*function getJsonForm(formName) {
     let form = document.formsp[formName];
     let fd = new FormData(form);
 
@@ -10,6 +10,15 @@ function getJsonForm(formName) {
     return JSON.stringify(data, null, 2);
 }
 
+async function encodeText() {
+            let requestData = JSON.stringify({
+                key: key.value,
+                text: text.value
+            })
+
+            let response = await fetch('https://localhost:44384/home/crypt/', {method: 'POST', body: requestData}
+            output.innerHTML = response.json().encodedText
+}
 
 $('.crypt__btn').on('click', async function (event) {
     event.preventDefault();
@@ -21,11 +30,29 @@ $('.crypt__btn').on('click', async function (event) {
         url: '/home/input',
         type: 'POST',
         data: json,
-        cache: false,
         contentType: false,
         processData: false,
         success: async function (data) {
             $('.output').html(data);
         }
    });
+});*/
+
+
+$('.input__file').on('change', function (event) {
+    event.preventDefault();
+
+    let format = $('.input__file').val().split('.')[1]
+    if (format === "txt" || format === "docx"){
+        $.ajax({
+            url: '/home/uploadfile',
+            type: 'POST',
+            data: new FormData($('.upload-file__form')[0]),
+            contentType: false,
+            processData: false,
+            success: function (data) {
+                $('#input__text').val(data);
+            }
+        });
+    }
 });
