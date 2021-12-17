@@ -24,12 +24,18 @@
                 <div class="row">
                     <div class="mb-3 col-4">
                         <label for="input__key" class="form-label">Key</label>
-                        <input type="text" class="form-control col-3" id="input__key" name="key" placeholder="скорпион" required>
+                        <input type="text" class="form-control col-3" id="input__key" name="key" placeholder="scorpion" required>
                     </div>
                     <div class="col-2 col-sm-2 mt-3 align-self-center">
                         <select class="mode form-select" name="mode" style="width: auto; height:auto;">
-                            <option value=0 selected>Encrypt</option>
-                            <option value=1>Decrypt</option>
+                            <option value="encrypt" selected>Encrypt</option>
+                            <option value="decrypt">Decrypt</option>
+                        </select>
+                    </div>
+                    <div class="col-2 col-sm-2 mt-3 ms-4 align-self-center">
+                        <select class="lang_mode form-select" name="langMode" style="width: auto; height:auto;">
+                            <option value="eng" selected>English</option>
+                            <option value="ru">Русский</option>
                         </select>
                     </div>
                 </div>

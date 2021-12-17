@@ -8,8 +8,8 @@ using System.Threading.Tasks;
 using DocumentFormat.OpenXml;
 using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Wordprocessing;
-using VigenerCryptor.Models;
 using VigenerCryptor.Services;
+
 
 
 namespace VigenerCryptor.Controllers
@@ -23,17 +23,16 @@ namespace VigenerCryptor.Controllers
 
 
         [HttpPost]
-        public string Crypt(CryptRequest request)
+        public string Crypt(string text, string key, string mode, string langMode="ru")
         {
-
-            switch (request.Mode)
+            switch (mode)
             {
-                case (0):
-                    return Cryptor.Encrypt(request.Text, request.Key);
-                case (1):
-                    return Cryptor.Decrypt(request.Text, request.Key);
+                case ("encrypt"):
+                    return new Cryptor(Cryptor.alphabets[langMode]).Encrypt(text, key);
+                case ("decrypt"):
+                    return new Cryptor(Cryptor.alphabets[langMode]).Decrypt(text, key);
                 default:
-                    return "";
+                    throw new ArgumentException("invalid format");
             }
         }
 
@@ -46,89 +45,32 @@ namespace VigenerCryptor.Controllers
             switch (format)
             {
                 case ("txt"):
-                    text = UploadTxt(file);
+                    text = DocumentService.UploadTxt(file.OpenReadStream());
                     break;
                 case ("docx"):
-                    text = UploadDocx(file);
+                    text = DocumentService.UploadDocx(file.OpenReadStream());
                     break;
             }
 
             return text;
         }
 
-        public static Dictionary<string, string> formatsContentType = new Dictionary<string, string>()
-        {
-            {"txt", "text/plain"},
-            {"docx",  "application/vnd.openxmlformats-officedocument.wordprocessingml.document"}
-        };
-
         [HttpPost]
-        public FileResult Download(DownloadRequest request)
+        public FileResult Download(string text, string filename, string format)
         {
-            string filename = $"{request.FileName}.{request.Format}";
-            string contentType = formatsContentType[request.Format];
+            string fullName = $"{filename}.{format}";
+            string contentType = DocumentService.formatsContentType[format];
 
-            switch(request.Format)
+            switch(format)
             {
                 case ("txt"):
                     UnicodeEncoding uni = new UnicodeEncoding();
-                    return File(uni.GetBytes(request.Text), contentType, filename);
+                    return File(uni.GetBytes(text), contentType, fullName);
                 case ("docx"):
-                    return File(textToDocBytes(request.Text), contentType, filename);
+                    return File(DocumentService.GetDocxBytes(text), contentType, fullName);
                 default:
                     throw new ArgumentException("invalid format");
             }
-        }
-
-        public byte[] textToDocBytes(string text)
-        {
-            using (MemoryStream memStream = new MemoryStream())
-            {
-                WordprocessingDocument doc = WordprocessingDocument.Create(memStream, WordprocessingDocumentType.Document, true);
-                
-                doc.AddMainDocumentPart().Document = new Document();
-                var body = doc.MainDocumentPart.Document.AppendChild(new Body());
-                
-                foreach(string parag in text.Split("\r\n"))
-                {
-                    var paragraph = body.AppendChild(new Paragraph());
-                    var run = paragraph.AppendChild(new Run());
-                    run.AppendChild(new Text(parag));
-                }
-
-                doc.Close();
-                return memStream.ToArray();
-            } 
-        }
-        
-
-        [NonAction]
-        private string UploadTxt(IFormFile file)
-        {
-            string result = "";
-            using (StreamReader stream = new StreamReader(file.OpenReadStream()))
-            {
-                result = stream.ReadToEnd();
-            }
-
-            return result;
-        }
-
-        [NonAction]
-        private string UploadDocx(IFormFile file)
-        {
-            List<string> result = new List<string>();
-
-            using (WordprocessingDocument doc = WordprocessingDocument.Open(file.OpenReadStream(), false))
-            {
-                var paragraphs = doc.MainDocumentPart.RootElement.Descendants<Paragraph>();
-                foreach (var paragraph in paragraphs)
-                {
-                    result.Add(paragraph.InnerText);
-                }
-            }
-
-            return string.Join("\r\n", result);
         }
     }
 }

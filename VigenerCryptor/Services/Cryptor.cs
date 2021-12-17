@@ -5,32 +5,45 @@ using System.Threading.Tasks;
 
 namespace VigenerCryptor.Services
 {
-    public class Cryptor
+    public class Cryptor : ICrypting
     {
-        private static string alphabetRus = "абвгдеёжзийклмнопрстуфхцчшщъыьэюя";
-        private static string alphabetRusUpper = alphabetRus.ToUpper();
-
-        private static int FindTargetIndex(char ch, char key)
+        public static Dictionary<string, string> alphabets = new Dictionary<string, string>()
         {
-            int keyShift = alphabetRus.IndexOf(char.ToLower(key));
-            if (keyShift != -1)
-                return (alphabetRus.IndexOf(char.ToLower(ch)) + keyShift) % 33;
-            else
-                return alphabetRus.IndexOf(ch);
+            { "ru", "абвгдеёжзийклмнопрстуфхцчшщъыьэюя"},
+            { "eng", "abcdefghijklmnopqrstuvwxyz" }
+        };
+        
+        private string Alphabet { get; set; }
+        private string AlphabetUpper { get; set; }
+
+        public Cryptor(string alphabet)
+        {
+            Alphabet = alphabet;
+            AlphabetUpper = alphabet.ToUpper();
         }
 
-        public static string Encrypt(string text, string key)
+        private int FindTargetIndex(char ch, char key)
+        {
+            int keyShift = Alphabet.IndexOf(char.ToLower(key));
+            if (keyShift != -1)
+                return (Alphabet.IndexOf(char.ToLower(ch)) + keyShift) % Alphabet.Length;
+            else
+                return Alphabet.IndexOf(ch);
+        }
+
+        public string Encrypt(string text, string key)
         {
             string result = "";
+
             for (int i = 0, j = 0; i < text.Length; i++)
             {
-                if (alphabetRus.Contains(text[i]))
+                if (Alphabet.Contains(text[i]))
                 {
-                    result += alphabetRus[FindTargetIndex(text[i], key[j++ % key.Length])];
+                    result += Alphabet[FindTargetIndex(text[i], key[j++ % key.Length])];
                 }
-                else if (alphabetRusUpper.Contains(text[i]))
+                else if (AlphabetUpper.Contains(text[i]))
                 {
-                    result += alphabetRusUpper[FindTargetIndex(text[i], key[j++ % key.Length])];
+                    result += AlphabetUpper[FindTargetIndex(text[i], key[j++ % key.Length])];
                 }
                 else
                 {
@@ -41,17 +54,17 @@ namespace VigenerCryptor.Services
             return result;
         }
         
-        public static string Decrypt(string text, string key)
+        public string Decrypt(string text, string key)
         {
             key = key.ToLower();
             string modKey = "";
             for (int i = 0; i < key.Length; i++)
             {
-                if (alphabetRus.Contains(key[i]))
+                if (Alphabet.Contains(key[i]))
                 {
-                    int temp = alphabetRus.IndexOf(key[i]) - 1;
-                    int index = temp < 0 ? temp + 33 : temp;
-                    modKey += alphabetRus[32 - index];
+                    int temp = Alphabet.IndexOf(key[i]) - 1;
+                    int index = temp < 0 ? temp + Alphabet.Length : temp;
+                    modKey += Alphabet[(Alphabet.Length - 1) - index];
                 }
                 else
                     modKey += key[i];

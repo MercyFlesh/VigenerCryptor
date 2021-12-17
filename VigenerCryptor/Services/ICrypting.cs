@@ -7,7 +7,7 @@ namespace VigenerCryptor.Services
 {
     public interface ICrypting
     {
-        string Encrypted();
-        string Decrypted();
+        string Encrypt(string text, string key);
+        string Decrypt(string text, string key);
     }
 }
