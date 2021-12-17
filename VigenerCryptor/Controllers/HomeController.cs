@@ -2,15 +2,11 @@
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.IO;
-using System.Web;
-using System.Text;
-using System.Text.Json;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
+using DocumentFormat.OpenXml.Packaging;
 using VigenerCryptor.Models;
 using VigenerCryptor.Services;
-using System.Diagnostics;
+
 
 namespace VigenerCryptor.Controllers
 {
@@ -60,6 +56,7 @@ namespace VigenerCryptor.Controllers
         private string UploadTxt(IFormFile file)
         {
             string result = "";
+
             using (StreamReader stream = new StreamReader(file.OpenReadStream()))
             {
                 result = stream.ReadToEnd();
@@ -72,7 +69,11 @@ namespace VigenerCryptor.Controllers
         private string UploadDocx(IFormFile file)
         {
             string result = "";
-            
+
+            using (WordprocessingDocument doc = WordprocessingDocument.Open(file.OpenReadStream(), false))
+            {
+                result = doc.MainDocumentPart.Document.InnerText;
+            }
 
             return result;
         }
