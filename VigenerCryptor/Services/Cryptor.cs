@@ -73,8 +73,6 @@ namespace VigenerCryptor.Services
                         int index = temp < 0 ? temp + Alphabet.Length : temp;
                         modKey += Alphabet[(Alphabet.Length - 1) - index];
                     }
-                    else
-                        modKey += key[i];
                 }
             });
 
