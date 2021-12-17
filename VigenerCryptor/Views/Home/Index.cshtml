@@ -22,7 +22,7 @@
                 </div>
 
                 <div class="row">
-                    <div class="mb-3 col-4">    
+                    <div class="mb-3 col-4">
                         <label for="input__key" class="form-label">Key</label>
                         <input type="text" class="form-control col-3" id="input__key" name="key" placeholder="скорпион" required>
                     </div>
@@ -34,15 +34,31 @@
                     </div>
                 </div>
 
-                <p><input type="submit" class="crypt__btn col-2 btn-secondary" value="Submit" /></p>
+                <p><input type="submit" class="crypt__btn col-2 p-1 btn-secondary rounded" value="Submit" /></p>
             </form>
         </div>
 
         <div class="col-6 otput__form">
-            <div>
+            <form method="post" action="/home/download">
                 <label for="text__output" class="form-label">Output</label>
-                <textarea class="form-control" id="text__output" rows="3" readonly style="background-color: white"></textarea>
-            </div>
+                <textarea class="form-control" id="text__output" name="text" rows="3" readonly style="background-color: white"></textarea>
+
+                <div class="row d-flex justify-content-end">
+                    <div class="col-3 mt-3 me-0">
+                        <label for="save__file-name" class="form-label">Save file</label>
+                        <input type="text" class="form-control col-3" id="save__filename" name="filename" placeholder="Filename" required>
+                    </div>
+                    <div class="col-2 col-sm-2 mt-5 me-3">
+                        <select class="formatfile form-select" name="format" style="width: auto; height:auto;">
+                            <option value="txt" selected>.txt</option>
+                            <option value="docx">.docx</option>
+                        </select>
+                    </div>
+                    
+
+                    <input type="submit" class="save__btn col-2 p-1 btn-secondary me-3 align-self-end rounded" value="Save"/>
+                </div>
+            </form>
         </div>
     </section>
 </section>

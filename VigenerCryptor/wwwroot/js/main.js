@@ -1,3 +1,22 @@
+$('.input__file').on('change', function (event) {
+    event.preventDefault();
+
+    let format = $('.input__file').val().split('.')[1]
+    if (format === "txt" || format === "docx"){
+        $.ajax({
+            url: '/home/uploadfile',
+            type: 'POST',
+            data: new FormData($('.upload-file__form')[0]),
+            contentType: false,
+            processData: false,
+            success: function (data) {
+                $('#input__text').val(data);
+            }
+        });
+    }
+});
+
+
 /*function getJsonForm(formName) {
     let form = document.formsp[formName];
     let fd = new FormData(form);
@@ -38,21 +57,14 @@ $('.crypt__btn').on('click', async function (event) {
    });
 });*/
 
+/*$('.save__btn').on('click', async function encodeText() {
+    let requestData = JSON.stringify({
+        text: text__output.value,
+        filename: save__filename.value
+    })
 
-$('.input__file').on('change', function (event) {
-    event.preventDefault();
-
-    let format = $('.input__file').val().split('.')[1]
-    if (format === "txt" || format === "docx"){
-        $.ajax({
-            url: '/home/uploadfile',
-            type: 'POST',
-            data: new FormData($('.upload-file__form')[0]),
-            contentType: false,
-            processData: false,
-            success: function (data) {
-                $('#input__text').val(data);
-            }
-        });
-    }
-});
+    await fetch('/home/Download', {
+        method: 'POST',
+        body: requestData
+    })
+});*/
