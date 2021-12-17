@@ -20,6 +20,7 @@ namespace VigenerCryptor.Services
         {
             Alphabet = alphabet;
             AlphabetUpper = alphabet.ToUpper();
+            
         }
 
         private int FindTargetIndex(char ch, char key)
@@ -31,46 +32,53 @@ namespace VigenerCryptor.Services
                 return Alphabet.IndexOf(ch);
         }
 
-        public string Encrypt(string text, string key)
+        public async Task<string> Encrypt(string text, string key)
         {
             string result = "";
 
-            for (int i = 0, j = 0; i < text.Length; i++)
+            await Task.Run(() =>
             {
-                if (Alphabet.Contains(text[i]))
+                for (int i = 0, j = 0; i < text.Length; i++)
                 {
-                    result += Alphabet[FindTargetIndex(text[i], key[j++ % key.Length])];
+                    if (Alphabet.Contains(text[i]))
+                    {
+                        result += Alphabet[FindTargetIndex(text[i], key[j++ % key.Length])];
+                    }
+                    else if (AlphabetUpper.Contains(text[i]))
+                    {
+                        result += AlphabetUpper[FindTargetIndex(text[i], key[j++ % key.Length])];
+                    }
+                    else
+                    {
+                        result += text[i].ToString();
+                    }
                 }
-                else if (AlphabetUpper.Contains(text[i]))
-                {
-                    result += AlphabetUpper[FindTargetIndex(text[i], key[j++ % key.Length])];
-                }
-                else
-                {
-                    result += text[i].ToString();
-                }
-            }
+            });
 
             return result;
         }
         
-        public string Decrypt(string text, string key)
+        public async Task<string> Decrypt(string text, string key)
         {
             key = key.ToLower();
             string modKey = "";
-            for (int i = 0; i < key.Length; i++)
+            
+            await Task.Run(() =>
             {
-                if (Alphabet.Contains(key[i]))
+                for (int i = 0; i < key.Length; i++)
                 {
-                    int temp = Alphabet.IndexOf(key[i]) - 1;
-                    int index = temp < 0 ? temp + Alphabet.Length : temp;
-                    modKey += Alphabet[(Alphabet.Length - 1) - index];
+                    if (Alphabet.Contains(key[i]))
+                    {
+                        int temp = Alphabet.IndexOf(key[i]) - 1;
+                        int index = temp < 0 ? temp + Alphabet.Length : temp;
+                        modKey += Alphabet[(Alphabet.Length - 1) - index];
+                    }
+                    else
+                        modKey += key[i];
                 }
-                else
-                    modKey += key[i];
-            }
+            });
 
-            return Encrypt(text, modKey);
+            return await Encrypt(text, modKey);
         }
     }
 }

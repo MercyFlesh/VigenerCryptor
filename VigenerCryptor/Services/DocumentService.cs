@@ -17,7 +17,7 @@ namespace VigenerCryptor.Services
             {"docx",  "application/vnd.openxmlformats-officedocument.wordprocessingml.document"}
         };
 
-        public static byte[] GetDocxBytes(string text)
+        public async static Task<byte[]> GetDocxBytes(string text)
         {
             using (MemoryStream memStream = new MemoryStream())
             {
@@ -26,40 +26,46 @@ namespace VigenerCryptor.Services
                 doc.AddMainDocumentPart().Document = new Document();
                 var body = doc.MainDocumentPart.Document.AppendChild(new Body());
 
-                foreach (string parag in text.Split("\r\n"))
+                await Task.Run(() =>
                 {
-                    var paragraph = body.AppendChild(new Paragraph());
-                    var run = paragraph.AppendChild(new Run());
-                    run.AppendChild(new Text(parag));
-                }
+                    foreach (string parag in text.Split("\r\n"))
+                    {
+                        var paragraph = body.AppendChild(new Paragraph());
+                        var run = paragraph.AppendChild(new Run());
+                        run.AppendChild(new Text(parag));
+                    }
+                });
 
                 doc.Close();
                 return memStream.ToArray();
             }
         }
 
-        public static string UploadTxt(Stream fileStream)
+        public async static Task<string> UploadTxt(Stream fileStream)
         {
             string result = "";
             using (StreamReader stream = new StreamReader(fileStream))
             {
-                result = stream.ReadToEnd();
+               result = await Task.Run(stream.ReadToEnd);
             }
 
             return result;
         }
 
-        public static string UploadDocx(Stream fileStream)
+        public async static Task<string> UploadDocx(Stream fileStream)
         {
             List<string> result = new List<string>();
 
             using (WordprocessingDocument doc = WordprocessingDocument.Open(fileStream, false))
             {
-                var paragraphs = doc.MainDocumentPart.RootElement.Descendants<Paragraph>();
-                foreach (var paragraph in paragraphs)
+                await Task.Run(() =>
                 {
-                    result.Add(paragraph.InnerText);
-                }
+                    var paragraphs = doc.MainDocumentPart.RootElement.Descendants<Paragraph>();
+                    foreach (var paragraph in paragraphs)
+                    {
+                        result.Add(paragraph.InnerText);
+                    }
+                });
             }
 
             return string.Join("\r\n", result);
